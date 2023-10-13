@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { CustomInput } from '../custom-input';
+// import { CodeInput, ConfirmCodeInputState } from '../code-input';
+import { OtpInput } from '../otp-input';
 import styles from './modal.module.css';
 
 interface ModalProps {
@@ -11,17 +13,39 @@ export const Modal: FC<ModalProps> = ({ onModalClose }) => {
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
 
+  useEffect(() => console.log('code', code), [code]);
+
+  // const parseCode = (code: string) => {
+  //   if (code.length === 4) {
+  //     const newCode = code.split('') as ConfirmCodeInputState;
+
+  //     return newCode;
+  //   } else {
+  //     return ['', '', '', ''] as ConfirmCodeInputState;
+  //   }
+  // };
+
+  // const handleCofirmInputChange = (code: ConfirmCodeInputState) => {
+  //   const newCode = code.join();
+  //   setCode(newCode);
+  // };
+
   useEffect(() => {
-    const ac = new AbortController();
+    // const ac = new AbortController();
 
     if ('OTPCredential' in window) {
+      // alert('функция OTPCredential работает в данном окружении');
       navigator.credentials
         .get({
           otp: { transport: ['sms'] },
-          signal: ac.signal,
+          // signal: ac.signal,
         })
         .then((otp) => {
-          otp?.code !== undefined && setCode(otp.code);
+          if (otp?.code !== undefined) {
+            // alert(`тип данных для Otp.code = ${typeof otp.code}`);
+
+            setCode(otp.code);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -29,7 +53,7 @@ export const Modal: FC<ModalProps> = ({ onModalClose }) => {
     }
 
     return () => {
-      ac.abort();
+      // ac.abort();
     };
   }, []);
 
@@ -40,6 +64,10 @@ export const Modal: FC<ModalProps> = ({ onModalClose }) => {
         {isFirstStep && <CustomInput label='Введите номер телефона' inputValue={phone} onCustomInputChange={setPhone} />}
 
         {!isFirstStep && <CustomInput label='Введите код из СМС' inputValue={code} onCustomInputChange={setCode} />}
+
+        {Boolean(code) && <span> This code from SMS {code} </span>}
+
+        {!isFirstStep && <OtpInput otpCodeValue={code} onOtpCodeValue={setCode} />}
 
         {isFirstStep && <button onClick={() => setIsFirstStep(false)}>Next Step</button>}
       </div>

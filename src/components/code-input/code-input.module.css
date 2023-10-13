@@ -1,0 +1,12 @@
+.inputWrapper {
+  padding: 18px;
+  display: flex;
+  column-gap: 8px;
+}
+
+.confirmInput {
+  box-sizing: border-box;
+  padding: 6px;
+  border: 1px solid #000;
+  width: 20px;
+}

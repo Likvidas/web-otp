@@ -1,0 +1,12 @@
+.inputsWrapper {
+  display: flex;
+  column-gap: 6px;
+}
+
+.input {
+  padding: 10px;
+  font-size: 26px;
+  border-radius: 8px;
+  width: 20px;
+  text-align: center;
+}
